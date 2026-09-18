@@ -1,10 +1,33 @@
 # Global agent instructions
 
-## Subagent use and cost
+## Subagents
 
-- Work in the main agent by default. Create a subagent only when a concrete benefit in completion time or result quality justifies the additional token cost, duplicated context, coordination, and review effort.
-- Delegate bounded, independent work with a clear deliverable, such as a substantial investigation that can run alongside useful main-agent work or an independent review of a consequential change. Handle simple edits, routine lookups, and tightly dependent steps directly.
-- Before spawning, briefly state the delegated task and why its expected benefit outweighs its cost. If the benefit is unclear, continue locally.
-- Use the fewest subagents needed, pass only relevant context, and choose the least expensive available model capable of the task when model selection is supported and permitted. Prefer parallel tool calls for independent mechanical operations.
-- Avoid duplicate investigations and recursive delegation. A subagent must apply this same cost-benefit test before creating another agent. Reuse an existing agent when suitable and stop redundant work.
-- The main agent remains responsible for integrating and checking results. Respect any explicit user budget or restriction on delegation.
+Work **solo**: the main agent does the work itself, including reading across many files and multi-step investigation. Use parallel tool calls for independent mechanical operations.
+
+### Gate
+
+Spawn a subagent only when all three hold:
+
+1. The task is bounded, read-only exploration, or an independent review of a consequential change, with a deliverable you can state in one sentence.
+2. You have useful work of your own to do while it runs. If you would wait for its result, do the task solo.
+3. You can name the concrete saving in time or main-context tokens, and it clearly exceeds the subagent's full cost: its own tokens, your briefing, and your review of its report.
+
+In doubt, stay solo. A benefit you cannot name is a failed gate.
+
+### Spawning
+
+Before the call, state in one line: the task, the saving, and the model and reasoning effort you chose.
+
+Set the model explicitly on every spawn; a subagent left to inherit the main agent's model runs at the most expensive tier. Pick the smallest tier, with low or medium reasoning:
+
+- Claude: `haiku`, with the `Explore` agent type for searches.
+- GPT / Codex: the mini or nano tier, reasoning effort `low`. Use `medium` when the task needs inference across files.
+- Any other provider: its smallest general-purpose model at the lowest reasoning setting that completes the task.
+
+Escalate one tier only after a small-model attempt returned an unusable report, and say that you are escalating and why.
+
+Brief the subagent with only the context it needs and a word cap for its report. Run one subagent at a time. Subagents work solo too: they finish their task without spawning further agents.
+
+### After
+
+The main agent checks the report against the code before relying on it. An explicit user instruction about delegation or budget overrides this section.
