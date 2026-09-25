@@ -20,7 +20,7 @@ Before the call, state in one line: the task, the saving, and the model and reas
 
 Set the model explicitly on every spawn; a subagent left to inherit the main agent's model runs at the most expensive tier. Pick the smallest tier, with low or medium reasoning:
 
-- Claude: `haiku`, with the `Explore` agent type for searches.
+- Claude: `sonnet`, with the `Explore` agent type for searches.
 - GPT / Codex: `luna`, the smallest of luna < terra < sol, reasoning effort `low`. Use `medium` when the task needs inference across files.
 - Any other provider: its smallest general-purpose model at the lowest reasoning setting that completes the task.
 
