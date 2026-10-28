@@ -1,0 +1,4 @@
+interface:
+  display_name: "Review React Effects"
+  short_description: "Audit React Effects and propose simpler designs"
+  default_prompt: "Use $review-react-effects to audit the React Effects in these changes."
