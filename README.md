@@ -18,4 +18,15 @@ ln -s <clone>/skills/<name> ~/.agents/skills/<name>
 ln -s ../../.agents/skills/<name> ~/.claude/skills/<name>
 ```
 
-Start a new session after changing global instructions. Pull repository updates on each machine to keep its local policy current.
+## Project skills
+
+To give everyone working on a project the same skills, install them into the repository instead
+of globally. The `skills` CLI copies each one into `.agents/skills/` (read by Codex), links it
+from `.claude/skills/`, and records its source and hash in `skills-lock.json`:
+
+```sh
+npx skills add ricar6os/agents-skills --skill review-react-effects --skill update-js-dependencies -a claude-code -a codex -y
+npx skills update -p   # pull later fixes
+```
+
+Commit the result. Start a new session after changing global instructions. Pull repository updates on each machine to keep its local policy current.
